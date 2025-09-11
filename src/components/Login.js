@@ -34,7 +34,7 @@ function Login() {
     <Container style={{marginTop: "5%"}}>
       <Row className="justify-content-md-center">
         <Col md={6}>
-          <h2 className="text-center mb-4">Eliza Statistics</h2>
+          <h2 className="text-center mb-4">Eliza Αναφορές</h2>
           <hr></hr>
           {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
@@ -59,7 +59,7 @@ function Login() {
             </Form.Group>
 
             <Button variant="primary" type="submit" className="w-100">
-              Login
+              Σύνδεση
             </Button>
           </Form>
         </Col>

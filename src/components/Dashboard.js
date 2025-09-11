@@ -14,7 +14,6 @@ function Dashboard() {
   return (
     <>
       <Header onLogout={handleLogout} />
-
       <Container className="mt-5 text-center">
         <h2>Dashboard!</h2>
         {/* Your dashboard content goes here */}
