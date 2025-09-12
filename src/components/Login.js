@@ -9,12 +9,16 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [serverDown, setServerDown] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    console.log(`${config.API_BASE_URL}/auth/login`)
+    setServerDown(false);
+
+    //console.log(`${config.API_BASE_URL}/auth/login`)
+
     try {
       const response = await axios.post(`${config.API_BASE_URL}/auth/login`, {
         username,
@@ -26,16 +30,25 @@ function Login() {
 
       navigate('/dashboard');
     } catch (err) {
-      setError('Login failed. Please check your credentials.');
+      if (err.code === 'ERR_NETWORK') {
+        setServerDown(true);
+      } else {
+        setError('Η σύνδεση απέτυχε, ελέγξτε τα διαπιστευτήρια σας');
+      }
     }
   };
 
   return (
-    <Container style={{marginTop: "5%"}}>
+    <Container style={{ marginTop: "5%" }}>
       <Row className="justify-content-md-center">
         <Col md={6}>
           <h2 className="text-center mb-4">Eliza Αναφορές</h2>
           <hr></hr>
+          {serverDown && (
+            <Alert variant="warning">
+              Ο διακομιστής δεν αποκρίνεται. Δοκιμάστε ξανά αργότερα.
+            </Alert>
+          )}
           {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formUsername" className="mb-3">
