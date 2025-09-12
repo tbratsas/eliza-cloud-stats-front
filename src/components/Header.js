@@ -7,12 +7,12 @@ function Header({ onLogout }) {
   return (
     <Navbar bg="light" variant="light" sticky="top" className="px-4 justify-content-between">
       <div className="d-flex align-items-center gap-4">
-        <Navbar.Brand>
+        <Navbar.Brand as={Link} to="/dashboard">
           <h1 className="mb-0">Eliza</h1>
         </Navbar.Brand>
-        <NavDropdown title="Κατηγορίες" id="basic-nav-dropdown">
-          <NavDropdown.Item as={Link} to="/dashboard/category">
-            Πωλήσεις
+        <NavDropdown title="Προϊόντα" id="basic-nav-dropdown">
+          <NavDropdown.Item as={Link} to="/dashboard/salesperproduct">
+            Πωλήσεις ανά Προϊόν
           </NavDropdown.Item>
           {/* Add more dropdown items here */}
         </NavDropdown>

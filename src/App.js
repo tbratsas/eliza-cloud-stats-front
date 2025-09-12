@@ -1,10 +1,9 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
-import Dashboard from './components/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
 import DashboardLayout from './components/DashboardLayout';
-import Category from './components/reports/Category';
+import SalesPerProduct from './components/reports/SalesPerProduct';
 
 function App() {
   return (
@@ -21,7 +20,7 @@ function App() {
             }
           >
             <Route index element={<h2>Dashboard!</h2>} />
-            <Route path="category" element={<Category />} />
+            <Route path="salesperproduct" element={<SalesPerProduct />} />
             {/* Add more nested routes here */}
           </Route>
         </Routes>
