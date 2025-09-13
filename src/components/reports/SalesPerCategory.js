@@ -2,27 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import axios from 'axios';
 import config from '../../config';
-import ElizaPieChart from '../../charts/ElizaPieChart'
+import ElizaColumnChart from '../../charts/ElizaColumnChart';
 
-export default function SalesPerProduct() {
-  const [salesPerProduct, setSalesPerProduct] = useState([]);
+export default function SalesPerCategory() {
+  const [salesPerCategory, setSalesPerCategory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem('elizaAuthToken');
-    axios.get(`${config.API_BASE_URL}/sales_per_product`, {
+    axios.get(`${config.API_BASE_URL}/sales_per_category`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
       .then(response => {
-        setSalesPerProduct(response.data);
+        setSalesPerCategory(response.data);
         setLoading(false);
       })
       .catch(err => {
-        console.error('Error fetching sales data:', err);
-        setError('Failed to load sales data');
+        console.error('Error fetching data:', err);
+        setError('Failed to load data');
         setLoading(false);
       });
   }, []);
@@ -32,19 +32,20 @@ export default function SalesPerProduct() {
 
   return (
     <div>
-      <h2 style={{ textAlign: 'left' }}>Πωλήσεις Προϊόντων</h2>
+      <h2 style={{ textAlign: 'left' }}>Πωλήσεις ανα Κατηγορία Προϊόντων</h2>
       <hr></hr>
       <ListGroup style={{textAlign: 'left'}}>
-        {salesPerProduct.map((item, index) => (
+        {salesPerCategory.map((item, index) => (
           <ListGroup.Item key={index}>
-            {item.product_name} - {item.total_quantity} / {item.total_sales}€
+            {item.category_name} - {item.total_quantity} / {item.total_sales}€
           </ListGroup.Item>
         ))}
       </ListGroup>
-      <ElizaPieChart 
-        data={salesPerProduct}
-        title="Πωλήσεις ανα ΠροΪόν"
-        />
+      <ElizaColumnChart
+        data={salesPerCategory}
+        title="Πωλήσεις ανα Κατηγορία Προϊόντων"
+        chartType="ColumnChart"  
+      />
     </div>
   );
 }

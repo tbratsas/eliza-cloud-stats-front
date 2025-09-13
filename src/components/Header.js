@@ -11,6 +11,9 @@ function Header({ onLogout }) {
           <h1 className="mb-0">Eliza</h1>
         </Navbar.Brand>
         <NavDropdown title="Προϊόντα" id="basic-nav-dropdown">
+          <NavDropdown.Item as={Link} to="/dashboard/salespercategory">
+            Πωλήσεις ανά Κατηγορία Προϊόντων
+          </NavDropdown.Item>
           <NavDropdown.Item as={Link} to="/dashboard/salesperproduct">
             Πωλήσεις ανά Προϊόν
           </NavDropdown.Item>

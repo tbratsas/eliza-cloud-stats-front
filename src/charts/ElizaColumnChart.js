@@ -1,9 +1,10 @@
 import { Chart } from "react-google-charts";
 
-export default function ElizaChart(props) {
-  //console.log(props.data)
+export default function ElizaColumnChart(props) {
+  console.log(props)
+  console.log(props.data)
 
-  let chartData = [["Name", "Price"]]
+  let chartData = [["Name", "Total Sales", { role: "style" }]]
 
   const options = {
     title: props.title,
@@ -11,13 +12,13 @@ export default function ElizaChart(props) {
 
   props.data.forEach(el => {
     //console.log(el)
-    chartData.push([el.product_name, el.total_price])
+    chartData.push([el.category_name, el.total_sales, "blue"])
   })
 
-  //console.log(chartData)
+  console.log(chartData)
   return (
     <Chart
-      chartType="PieChart"
+      chartType="ColumnChart"
       data={chartData}
       options={options}
       width={"100%"}
