@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { ListGroup } from 'react-bootstrap';
 import axios from 'axios';
 import config from '../../config';
+import ElizaChart from '../../charts/ElizaChart';
 
 export default function SalesPerProduct() {
   const [salesPerProduct, setSalesPerProduct] = useState([]);
@@ -25,19 +27,21 @@ export default function SalesPerProduct() {
       });
   }, []);
 
-  if (loading) return <div>Loading sales data...</div>;
+  if (loading) return <div>Φόρτωση δεδομένων...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <div>
-      <h2>Sales Per Product</h2>
-      <ul>
+      <h2 style={{ textAlign: 'left' }}>Πωλήσεις Προϊόντων</h2>
+      <hr></hr>
+      <ListGroup style={{textAlign: 'left'}}>
         {salesPerProduct.map((item, index) => (
-          <li key={index}>
-            {item.product_name} — {item.total_quantity} units — €{item.total_price}
-          </li>
+          <ListGroup.Item key={index}>
+            {item.product_name} - {item.total_quantity} / {item.total_price}€
+          </ListGroup.Item>
         ))}
-      </ul>
+      </ListGroup>
+      <ElizaChart data={salesPerProduct} title="Πωλήσεις ανα ΠροΪόν"/>
     </div>
   );
 }
