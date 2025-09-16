@@ -19,6 +19,14 @@ function Header({ onLogout }) {
           </NavDropdown.Item>
           {/* Add more dropdown items here */}
         </NavDropdown>
+
+        <NavDropdown title="ΦΠΑ" id="basic-vat-dropdown">
+          <NavDropdown.Item as={Link} to="/dashboard/vat">
+            Συνολικό ΦΠΑ
+          </NavDropdown.Item>
+          {/* Add more dropdown items here */}
+        </NavDropdown>
+
       </div>
       <Nav>
         <Button variant="danger" onClick={onLogout}>

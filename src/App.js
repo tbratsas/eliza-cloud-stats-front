@@ -5,6 +5,7 @@ import PrivateRoute from './components/PrivateRoute';
 import DashboardLayout from './components/DashboardLayout';
 import SalesPerProduct from './components/reports/SalesPerProduct';
 import SalesPerCategory from './components/reports/SalesPerCategory';
+import Vat from './components/reports/Vat';
 
 function App() {
   return (
@@ -23,7 +24,8 @@ function App() {
             <Route index element={<h2>Dashboard!</h2>} />
             <Route path="salesperproduct" element={<SalesPerProduct />} />
             <Route path="salespercategory" element={<SalesPerCategory />} />
-            {/* Add more nested routes here */}
+            <Route path="vat" element={<Vat />} />
+            
           </Route>
         </Routes>
       </div>
