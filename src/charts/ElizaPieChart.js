@@ -1,8 +1,8 @@
 import { Chart } from "react-google-charts";
 
 export default function PieChart(props) {
-  console.log(props)
-  console.log(props.data)
+  /* console.log(props)
+  console.log(props.data) */
 
   let chartData = [["Name", "Total Price"]]
 
