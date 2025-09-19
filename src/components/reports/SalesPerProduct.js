@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { ListGroup, Button, Container, Row, Col, Collapse, Form } from 'react-bootstrap';
+import { ListGroup, Button, Container, Row, Col, Collapse } from 'react-bootstrap';
 import axios from 'axios';
 import config from '../../config';
 import ElizaPieChart from '../../charts/ElizaPieChart'
+import DateRangeFilter from './DateRangeFilter';
 
 export default function SalesPerProduct() {
   const [salesPerProduct, setSalesPerProduct] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showChart, setShowChart] = useState(false);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-
 
   const handleToggle = () => {
     setShowChart(!showChart);
@@ -41,29 +39,13 @@ export default function SalesPerProduct() {
   return (
     <Container className="mt-4">
       {/* Dates */}
-      <Row className="mb-3">
-        <Col xs="auto">
-          <h5>Ημερομηνίες</h5>
-        </Col>
-        <Col xs="auto">
-          <Form.Label>Από</Form.Label>
-          <Form.Control
-            type="datetime-local"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            max={endDate || undefined}
-          />
-        </Col>
-        <Col xs="auto">
-          <Form.Label>Έως</Form.Label>
-          <Form.Control
-            type="datetime-local"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            min={startDate || undefined}
-          />
-        </Col>
-      </Row>
+      {/* Dates */}
+      <DateRangeFilter
+        onFilter={({ startDate, endDate }) => {
+          console.log('Filtering from:', startDate, 'to:', endDate);
+          // You can now use these values to filter your data
+        }}
+      />
       <Row>
         <Col>
           <h2 style={{ textAlign: 'left' }}>Πωλήσεις Προϊόντων</h2>
