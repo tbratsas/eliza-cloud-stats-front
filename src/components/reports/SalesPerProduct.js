@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ListGroup } from 'react-bootstrap';
+import { ListGroup, Button, Container, Row, Col, Collapse } from 'react-bootstrap';
 import axios from 'axios';
 import config from '../../config';
 import ElizaPieChart from '../../charts/ElizaPieChart'
@@ -8,6 +8,11 @@ export default function SalesPerProduct() {
   const [salesPerProduct, setSalesPerProduct] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showChart, setShowChart] = useState(false);
+
+  const handleToggle = () => {
+    setShowChart(!showChart);
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('elizaAuthToken');
@@ -31,20 +36,46 @@ export default function SalesPerProduct() {
   if (error) return <div>{error}</div>;
 
   return (
-    <div>
-      <h2 style={{ textAlign: 'left' }}>Πωλήσεις Προϊόντων</h2>
-      <hr></hr>
-      <ListGroup style={{textAlign: 'left'}}>
-        {salesPerProduct.map((item, index) => (
-          <ListGroup.Item key={index}>
-            {item.product_name} - {item.total_quantity} / {item.total_sales}€
-          </ListGroup.Item>
-        ))}
-      </ListGroup>
-      <ElizaPieChart 
-        data={salesPerProduct}
-        title="Πωλήσεις ανα ΠροΪόν"
-        />
-    </div>
-  );
+    <Container className="mt-4">
+      <Row>
+        <Col>
+          <h2 style={{ textAlign: 'left' }}>Πωλήσεις Προϊόντων</h2>
+          <hr></hr>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col>
+          <ListGroup style={{ textAlign: 'left' }}>
+            {salesPerProduct.map((item, index) => (
+              <ListGroup.Item key={index}>
+                {item.product_name} - {item.total_quantity} / {item.total_sales}€
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        </Col>
+      </Row>
+      
+      <Row className="mt-3">
+        <Col xs="auto">
+          <Button variant="primary" onClick={handleToggle}>
+            {showChart ? 'Απόκρυψη Γραφήματος' : 'Εμφάνιση Γραφήματος'}
+          </Button>
+        </Col>
+      </Row>
+
+      {showChart && (
+        <Row>
+          <Col>
+            <Collapse in={showChart}>
+              <ElizaPieChart
+                data={salesPerProduct}
+                title="Πωλήσεις ανα ΠροΪόν"
+              />
+            </Collapse>
+          </Col>
+        </Row>
+      )}
+    </Container>
+  )
 }
