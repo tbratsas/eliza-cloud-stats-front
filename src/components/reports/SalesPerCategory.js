@@ -68,7 +68,8 @@ export default function SalesPerCategory() {
 
       <Row className="mt-3">
         <Col xs="auto">
-          <Button variant="primary" onClick={handleToggle}>
+          <Button variant="primary" onClick={handleToggle}
+            disabled={!Array.isArray(salesPerCategory) || salesPerCategory.length === 0}>
             {showChart ? 'Απόκρυψη Γραφήματος' : 'Εμφάνιση Γραφήματος'}
           </Button>
         </Col>

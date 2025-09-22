@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { Row, Col, Form, Button } from 'react-bootstrap';
+import { Row, Col, Button, Form } from 'react-bootstrap';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { el } from 'date-fns/locale';
 
 function DateRangeFilter({ onFilter }) {
     const [startDate, setStartDate] = useState('');
@@ -24,23 +27,39 @@ function DateRangeFilter({ onFilter }) {
     return (
         <Row className="mb-3 align-items-end">
             <Col xs="auto">
-                <Form.Label>Από</Form.Label>
-                <Form.Control
-                    type="datetime-local"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    max={endDate || undefined}
-                />
+                <Form.Group>
+                    <Form.Label>Από</Form.Label>
+                    <DatePicker
+                        selected={startDate}
+                        onChange={(date) => setStartDate(date)}
+                        showTimeSelect
+                        dateFormat="Pp"
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        placeholderText="Επιλέξτε ημερομηνία και ώρα"
+                        locale={el}
+                        className="form-control"
+                        maxDate={endDate}
+                    />
+                </Form.Group>
             </Col>
 
             <Col xs="auto">
-                <Form.Label>Έως</Form.Label>
-                <Form.Control
-                    type="datetime-local"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    min={startDate || undefined}
-                />
+                <Form.Group>
+                    <Form.Label>Έως</Form.Label>
+                    <DatePicker
+                        selected={endDate}
+                        onChange={(date) => setEndDate(date)}
+                        showTimeSelect
+                        dateFormat="Pp"
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        placeholderText="Επιλέξτε ημερομηνία και ώρα"
+                        locale={el}
+                        className="form-control"
+                        minDate={startDate}
+                    />
+                </Form.Group>
             </Col>
 
             <Col xs="auto">
@@ -50,7 +69,7 @@ function DateRangeFilter({ onFilter }) {
                 >
                     Εφαρμογή
                 </Button>
-           </Col>
+            </Col>
 
             {hasDates && (
                 <Col xs="auto">
