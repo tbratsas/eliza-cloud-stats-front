@@ -3,6 +3,7 @@ import { ListGroup, Button, Container, Row, Col, Collapse } from 'react-bootstra
 import axios from 'axios';
 import config from '../../config';
 import DateRangeFilter from './DateRangeFilter';
+import { createDateFilter } from '../../utils/filterByDate';
 import ElizaColumnChart from '../../charts/ElizaColumnChart';
 
 export default function SalesPerCategory() {
@@ -10,7 +11,7 @@ export default function SalesPerCategory() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showChart, setShowChart] = useState(false);
-  
+
   const handleToggle = () => {
     setShowChart(!showChart);
   };
@@ -39,12 +40,7 @@ export default function SalesPerCategory() {
   return (
     <Container className="mt-4">
       {/* Dates */}
-      <DateRangeFilter
-        onFilter={({ startDate, endDate }) => {
-          console.log('Filtering from:', startDate, 'to:', endDate);
-          // You can now use these values to filter your data
-        }}
-      />
+      <DateRangeFilter onFilter={createDateFilter('sales_per_category', setSalesPerCategory)} />
 
       <Row>
         <Col>
@@ -56,12 +52,17 @@ export default function SalesPerCategory() {
       <Row>
         <Col>
           <ListGroup className="text-start">
-            {salesPerCategory.map((item, index) => (
-              <ListGroup.Item key={index}>
-                {item.category_name} - {item.total_quantity} / {item.total_sales}€
-              </ListGroup.Item>
-            ))}
+            {Array.isArray(salesPerCategory) && salesPerCategory.length > 0 ? (
+              salesPerCategory.map((item, index) => (
+                <ListGroup.Item key={index}>
+                  {item.category_name} - {item.total_quantity} / {item.total_sales}€
+                </ListGroup.Item>
+              ))
+            ) : (
+              <p>Δεν υπάρχουν αποτελέσματα για το επιλεγμένο διάστημα.</p>
+            )}
           </ListGroup>
+
         </Col>
       </Row>
 

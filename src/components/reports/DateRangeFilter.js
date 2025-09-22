@@ -4,11 +4,23 @@ import { Row, Col, Form, Button } from 'react-bootstrap';
 function DateRangeFilter({ onFilter }) {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+
     const handleFilter = () => {
         if (onFilter) {
             onFilter({ startDate, endDate });
         }
     };
+
+    const handleClear = () => {
+        setStartDate('');
+        setEndDate('');
+        if (onFilter) {
+            onFilter({ startDate: '', endDate: '' });
+        }
+    };
+
+    const hasDates = startDate || endDate;
+
     return (
         <Row className="mb-3 align-items-end">
             <Col xs="auto">
@@ -32,10 +44,21 @@ function DateRangeFilter({ onFilter }) {
             </Col>
 
             <Col xs="auto">
-                <Button variant="success" onClick={handleFilter}>
+                <Button variant="success"
+                    onClick={handleFilter}
+                    disabled={!startDate || !endDate || new Date(startDate) > new Date(endDate)}
+                >
                     Εφαρμογή
                 </Button>
-            </Col>
+           </Col>
+
+            {hasDates && (
+                <Col xs="auto">
+                    <Button variant="warning" onClick={handleClear}>
+                        Καθαρισμός
+                    </Button>
+                </Col>
+            )}
         </Row>
     );
 }
