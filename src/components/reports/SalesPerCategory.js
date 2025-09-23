@@ -62,7 +62,6 @@ export default function SalesPerCategory() {
               <p>Δεν υπάρχουν αποτελέσματα για το επιλεγμένο διάστημα.</p>
             )}
           </ListGroup>
-
         </Col>
       </Row>
 

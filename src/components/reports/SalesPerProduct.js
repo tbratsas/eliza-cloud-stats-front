@@ -4,6 +4,7 @@ import axios from 'axios';
 import config from '../../config';
 import ElizaPieChart from '../../charts/ElizaPieChart'
 import DateRangeFilter from './DateRangeFilter';
+import { createDateFilter } from '../../utils/filterByDate';
 
 export default function SalesPerProduct() {
   const [salesPerProduct, setSalesPerProduct] = useState([]);
@@ -39,13 +40,8 @@ export default function SalesPerProduct() {
   return (
     <Container className="mt-4">
       {/* Dates */}
-      {/* Dates */}
-      <DateRangeFilter
-        onFilter={({ startDate, endDate }) => {
-          console.log('Filtering from:', startDate, 'to:', endDate);
-          // You can now use these values to filter your data
-        }}
-      />
+      <DateRangeFilter onFilter={createDateFilter('sales_per_product', setSalesPerProduct)} />
+
       <Row>
         <Col>
           <h2 style={{ textAlign: 'left' }}>Πωλήσεις Προϊόντων</h2>
@@ -56,18 +52,23 @@ export default function SalesPerProduct() {
       <Row>
         <Col>
           <ListGroup style={{ textAlign: 'left' }}>
-            {salesPerProduct.map((item, index) => (
-              <ListGroup.Item key={index}>
-                {item.product_name} - {item.total_quantity} / {item.total_sales}€
-              </ListGroup.Item>
-            ))}
+            {Array.isArray(salesPerProduct) && salesPerProduct.length > 0 ? (
+              salesPerProduct.map((item, index) => (
+                <ListGroup.Item key={index}>
+                  {item.product_name} - {item.total_quantity} / {item.total_sales}€
+                </ListGroup.Item>
+              ))
+            ) : (
+              <p>Δεν υπάρχουν αποτελέσματα για το επιλεγμένο διάστημα.</p>
+            )}
           </ListGroup>
         </Col>
       </Row>
 
       <Row className="mt-3">
         <Col xs="auto">
-          <Button variant="primary" onClick={handleToggle}>
+          <Button variant="primary" onClick={handleToggle}
+            disabled={!Array.isArray(salesPerProduct) || salesPerProduct.length === 0}>
             {showChart ? 'Απόκρυψη Γραφήματος' : 'Εμφάνιση Γραφήματος'}
           </Button>
         </Col>
