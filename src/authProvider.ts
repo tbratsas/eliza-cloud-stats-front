@@ -1,24 +1,26 @@
 import type { AuthProvider } from "@refinedev/core";
 
-export const TOKEN_KEY = "refine-auth";
+export const TOKEN_KEY = "auth";
 
 export const authProvider: AuthProvider = {
-  login: async ({ username, email, password }) => {
-    if ((username || email) && password) {
-      localStorage.setItem(TOKEN_KEY, username);
-      return {
-        success: true,
-        redirectTo: "/",
-      };
-    }
+  login: async ({ username, password }) => {
+    try {
+      const res = await fetch("http://localhost:5001/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
 
-    return {
-      success: false,
-      error: {
-        name: "LoginError",
-        message: "Invalid username or password",
-      },
-    };
+      if (res.ok) {
+        const { token } = await res.json();
+        localStorage.setItem(TOKEN_KEY, token);
+        return { success: true };
+      }
+
+      return { success: false, error: { message: "Login failed" } };
+    } catch {
+      return { success: false, error: { message: "Network error" } };
+    }
   },
   logout: async () => {
     localStorage.removeItem(TOKEN_KEY);
