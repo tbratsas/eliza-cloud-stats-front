@@ -8,9 +8,18 @@ import {
   Typography,
   CircularProgress,
   Container,
+  Box,
+  Button,
+  Collapse,
 } from "@mui/material";
+import { useState } from "react";
+import PieChart from "./PieChart";
 
 export const SalesPerProduct = () => {
+  const [showChart, setShowChart] = useState(false);
+
+  const handleToggle = () => setShowChart((prev) => !prev);
+  
   const token = localStorage.getItem("auth");
 
   const queryResult = useList({
@@ -55,6 +64,25 @@ export const SalesPerProduct = () => {
           ))}
         </TableBody>
       </Table>
+      <Box mt={3}>
+        <Button
+          variant="contained"
+          onClick={handleToggle}
+          disabled={!Array.isArray(items) || items.length === 0}
+        >
+          {showChart ? "Απόκρυψη Γραφήματος" : "Εμφάνιση Γραφήματος"}
+        </Button>
+
+        <Collapse in={showChart}>
+          <Box mt={2}>
+            <PieChart
+              data={items}
+              title="Πωλήσεις ανα ΠροΪόν"
+            />
+          </Box>
+        </Collapse>
+      </Box>
     </Container>
+
   );
 };
