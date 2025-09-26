@@ -63,8 +63,8 @@ export const authProvider: AuthProvider = {
     if (token) {
       return {
         id: 1,
-        name: "John Doe",
-        avatar: "https://i.pravatar.cc/300",
+        name: "Eliza Superuser",
+        avatar: "https://i.pravatar.cc/150?img=50",
       };
     }
     return null;

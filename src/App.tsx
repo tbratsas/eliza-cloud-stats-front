@@ -21,7 +21,6 @@ function App() {
           { name: "sales_per_product", list: "/sales_per_product" },
           { name: "sales_per_category", list: "/sales_per_category" },
         ]}
-        layout={Layout}
       >
         <Routes>
           {/* Redirect root to login */}
@@ -30,12 +29,14 @@ function App() {
           {/* Login page */}
           <Route path="/login" element={<LoginPage />} />
 
-        {/* Protected routes */}
+          {/* Protected routes */}
           <Route
             path="/dashboard"
             element={
               <Authenticated key="auth-dashboard" fallback={<Navigate to="/login" />}>
-                <Dashboard />
+                <Layout>
+                  <Dashboard />
+                </Layout>
               </Authenticated>
             }
           />
@@ -43,7 +44,10 @@ function App() {
             path="/sales_per_product"
             element={
               <Authenticated key="auth-endpoint1" fallback={<Navigate to="/login" />}>
-                <SalesPerProduct />
+
+                <Layout>
+                  <SalesPerProduct />
+                </Layout>
               </Authenticated>
             }
           />
@@ -51,7 +55,9 @@ function App() {
             path="/sales_per_category"
             element={
               <Authenticated key="auth-endpoint1" fallback={<Navigate to="/login" />}>
-                <SalesPerCategory />
+                <Layout>
+                  <SalesPerCategory />
+                </Layout>
               </Authenticated>
             }
           />

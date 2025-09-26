@@ -13,7 +13,7 @@ export const Dashboard = () => {
         <Container sx={{ mt: 4 }}>
             <Typography variant="h4" gutterBottom>Καλώς ήρθατε στον πίνακα ελέγχου</Typography>
 
-            <List>
+            {/* <List>
                 <ListItemButton onClick={() => navigate("/sales_per_product")}>
                     <ListItemText primary="Πωλήσεις ανά προϊόν" />
                 </ListItemButton>
@@ -27,7 +27,7 @@ export const Dashboard = () => {
 
             <Button variant="outlined" color="error" onClick={handleLogout} sx={{ mt: 2 }}>
                 Αποσύνδεση
-            </Button>
+            </Button> */}
         </Container>
     );
 };
