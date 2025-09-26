@@ -5,8 +5,9 @@ import { LoginPage } from "./pages/login";
 import { SalesPerProduct } from "./pages/sales_per_product/list";
 import { SalesPerCategory } from "./pages/sales_per_category/list";
 import { authProvider } from "./authProvider";
-import { Layout } from "./components/layout";
+import { Layout } from "./layout/layout";
 import { dataProvider } from "./dataProvider"; // your custom wrapper
+import { Dashboard } from "./pages/Dashboard";
 
 const API_URL = "http://localhost:5001/api";
 
@@ -20,7 +21,7 @@ function App() {
           { name: "sales_per_product", list: "/sales_per_product" },
           { name: "sales_per_category", list: "/sales_per_category" },
         ]}
-        Layout={Layout}
+        layout={Layout}
       >
         <Routes>
           {/* Redirect root to login */}
@@ -29,7 +30,15 @@ function App() {
           {/* Login page */}
           <Route path="/login" element={<LoginPage />} />
 
-          {/* Protected routes */}
+        {/* Protected routes */}
+          <Route
+            path="/dashboard"
+            element={
+              <Authenticated key="auth-dashboard" fallback={<Navigate to="/login" />}>
+                <Dashboard />
+              </Authenticated>
+            }
+          />
           <Route
             path="/sales_per_product"
             element={
@@ -42,7 +51,7 @@ function App() {
             path="/sales_per_category"
             element={
               <Authenticated key="auth-endpoint1" fallback={<Navigate to="/login" />}>
-               <SalesPerCategory />
+                <SalesPerCategory />
               </Authenticated>
             }
           />

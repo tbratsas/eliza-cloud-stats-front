@@ -16,7 +16,7 @@ export const LoginPage = () => {
       { username, password },
       {
         onSuccess: () => {
-          navigate("/sales_per_product"); // redirect after login
+          navigate("/dashboard"); // redirect after login
         },
       }
     );

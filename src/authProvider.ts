@@ -14,12 +14,27 @@ export const authProvider: AuthProvider = {
       if (res.ok) {
         const { token } = await res.json();
         localStorage.setItem(TOKEN_KEY, token);
-        return { success: true };
+        return {
+          success: true,
+          redirectTo: "/sales_per_product", // optional redirect
+        };
       }
 
-      return { success: false, error: { message: "Login failed" } };
-    } catch {
-      return { success: false, error: { message: "Network error" } };
+      return {
+        success: false,
+        error: {
+          message: "Login failed",
+          name: "LoginError",
+        },
+      };
+    } catch (err) {
+      return {
+        success: false,
+        error: {
+          message: "Network error",
+          name: "NetworkError",
+        },
+      };
     }
   },
   logout: async () => {
