@@ -11,11 +11,9 @@ import {
 } from "@mui/material";
 
 export const SalesPerProduct = () => {
-  //const { data, isLoading, isError } = useList({ resource: "sales_per_product" });
-  console.log("SalesPerProduct component loaded");
   const token = localStorage.getItem("auth");
 
-  const { data, isLoading, isError } = useList({
+  const queryResult = useList({
     resource: "sales_per_product",
     meta: {
       headers: {
@@ -24,6 +22,10 @@ export const SalesPerProduct = () => {
     },
   });
 
+  //console.log(queryResult)
+
+  const { data, isLoading, isError } = queryResult.query
+
   if (isLoading) return <CircularProgress />;
   if (isError) return <Typography>Σφάλμα φόρτωσης δεδομένων</Typography>;
 
@@ -31,22 +33,24 @@ export const SalesPerProduct = () => {
 
   return (
     <Container sx={{ mt: 4 }}>
-      <Typography variant="h5" gutterBottom>Δεδομένα Endpoint1</Typography>
+      <Typography variant="h5" gutterBottom>Πωλήσεις Προϊόντων</Typography>
       <Table>
         <TableHead>
           <TableRow>
             {/* Replace with your actual field names */}
-            <TableCell>ID</TableCell>
+            <TableCell>Product ID</TableCell>
             <TableCell>Όνομα</TableCell>
-            <TableCell>Τιμή</TableCell>
+            <TableCell>Ποσότητα</TableCell>
+            <TableCell>Συνολικές Πωλήσεις</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {items.map((item: any) => (
-            <TableRow key={item.id}>
-              <TableCell>{item.id}</TableCell>
-              <TableCell>{item.name}</TableCell>
-              <TableCell>{item.value}</TableCell>
+            <TableRow key={item.product_id}>
+              <TableCell>{item.product_id}</TableCell>
+              <TableCell>{item.product_name}</TableCell>
+              <TableCell>{item.total_quantity}</TableCell>
+              <TableCell>{item.total_sales} Euros</TableCell>
             </TableRow>
           ))}
         </TableBody>
