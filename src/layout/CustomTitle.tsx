@@ -1,7 +1,7 @@
 import { Typography, Box } from "@mui/material";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import { useNavigate } from "react-router-dom";
-
+import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 export const CustomTitle = ({ collapsed }: { collapsed: boolean }) => {
   const navigate = useNavigate();
 
@@ -13,10 +13,10 @@ export const CustomTitle = ({ collapsed }: { collapsed: boolean }) => {
       sx={{ cursor: "pointer" }}
       onClick={() => navigate("/dashboard")}
     >
-      <StorefrontIcon sx={{ mr: collapsed ? 0 : 1 }} />
+      <BarChartOutlinedIcon sx={{ mr: collapsed ? 0 : 1 }} />
       {!collapsed && (
         <Typography variant="h6" fontWeight="bold">
-          Greek Sales App
+          Eliza Reports
         </Typography>
       )}
     </Box>
