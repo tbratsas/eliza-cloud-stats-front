@@ -1,11 +1,13 @@
 import type { AuthProvider } from "@refinedev/core";
 
+import { API_URL } from "./../config";
+
 export const TOKEN_KEY = "auth";
 
 export const authProvider: AuthProvider = {
   login: async ({ username, password }) => {
     try {
-      const res = await fetch("http://localhost:5001/api/auth/login", {
+      const res = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),

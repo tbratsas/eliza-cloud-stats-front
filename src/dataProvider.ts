@@ -1,5 +1,4 @@
 import simpleRestProvider from "@refinedev/simple-rest";
-
-const API_URL = "http://localhost:5001/api";
+import { API_URL } from "./../config";
 
 export const dataProvider = simpleRestProvider(API_URL);

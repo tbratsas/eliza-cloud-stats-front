@@ -1,7 +1,7 @@
 import { Typography, Box } from "@mui/material";
-import StorefrontIcon from "@mui/icons-material/Storefront";
 import { useNavigate } from "react-router-dom";
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
+
 export const CustomTitle = ({ collapsed }: { collapsed: boolean }) => {
   const navigate = useNavigate();
 
