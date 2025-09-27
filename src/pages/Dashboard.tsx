@@ -11,8 +11,11 @@ export const Dashboard = () => {
 
     return (
         <Container sx={{ mt: 4 }}>
-            <Typography variant="h4" gutterBottom>Καλώς ήρθατε στον πίνακα ελέγχου</Typography>
-
+            <Typography variant="h4" gutterBottom>Αναφορές Eliza</Typography>
+            <hr></hr>
+            <Typography variant="body1" gutterBottom>
+                Χρησιμοποιήστε τις επιλογές στα αριστερά για να περιηγηθείτε στην εφαρμογή.
+            </Typography>
             {/* <List>
                 <ListItemButton onClick={() => navigate("/sales_per_product")}>
                     <ListItemText primary="Πωλήσεις ανά προϊόν" />
