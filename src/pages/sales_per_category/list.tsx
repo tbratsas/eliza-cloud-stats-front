@@ -8,9 +8,19 @@ import {
   Typography,
   CircularProgress,
   Container,
+  Box,
+  Button,
+  Collapse,
 } from "@mui/material";
+import ColumnChart from './ColumnChart'
+
+import { useState } from "react";
 
 export const SalesPerCategory = () => {
+  const [showChart, setShowChart] = useState(false);
+  
+  const handleToggle = () => setShowChart((prev) => !prev);
+
   const token = localStorage.getItem("auth");
 
   const queryResult = useList({
@@ -53,6 +63,24 @@ export const SalesPerCategory = () => {
           ))}
         </TableBody>
       </Table>
+      <Box mt={3}>
+        <Button
+          variant="contained"
+          onClick={handleToggle}
+          disabled={!Array.isArray(items) || items.length === 0}
+        >
+          {showChart ? "Απόκρυψη Γραφήματος" : "Εμφάνιση Γραφήματος"}
+        </Button>
+
+        <Collapse in={showChart}>
+          <Box mt={2}>
+            <ColumnChart
+              data={items}
+              title="Πωλήσεις ανα Προϊόν"
+            />
+          </Box>
+        </Collapse>
+      </Box>
     </Container>
   );
 };
