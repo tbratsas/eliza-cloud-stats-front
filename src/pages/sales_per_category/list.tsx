@@ -75,7 +75,7 @@ export const SalesPerCategory = () => {
         <Collapse in={showChart}>
           <Box mt={2}>
             <ColumnChart
-              data={items}
+              data={items as { category_name: string; total_sales: number }[]}
               title="Πωλήσεις ανα Προϊόν"
             />
           </Box>

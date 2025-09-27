@@ -5,7 +5,7 @@ import { LoginPage } from "./pages/login";
 import { SalesPerProduct } from "./pages/sales_per_product/list";
 import { SalesPerCategory } from "./pages/sales_per_category/list";
 import { authProvider } from "./authProvider";
-import { Layout } from "./layout/layout";
+import { Layout } from "./layout/Layout";
 import { dataProvider } from "./dataProvider"; // your custom wrapper
 import { Dashboard } from "./pages/Dashboard";
 

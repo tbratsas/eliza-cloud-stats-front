@@ -76,7 +76,7 @@ export const SalesPerProduct = () => {
         <Collapse in={showChart}>
           <Box mt={2}>
             <PieChart
-              data={items}
+              data={items as { product_name: string; total_sales: number }[]}
               title="Πωλήσεις ανα ΠροΪόν"
             />
           </Box>

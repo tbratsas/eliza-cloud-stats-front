@@ -8,7 +8,7 @@ type PieChartProps = {
 
 export default function PieChart({ data, title }: PieChartProps) {
   const chartData = useMemo(() => {
-    const result = [["Name", "Total Price"]];
+    const result: (string | number)[][] = [["Name", "Total Price"]];
     data?.forEach(el => {
       result.push([el.product_name, el.total_sales]);
     });
