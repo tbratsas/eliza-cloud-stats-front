@@ -1,12 +1,13 @@
 import { useLogin } from "@refinedev/core";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { Container, TextField, Button, Typography } from "@mui/material";
+import { Container, TextField, Button, Typography, Alert } from "@mui/material";
 
 export const LoginPage = () => {
   const { mutate: login } = useLogin();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
@@ -16,7 +17,12 @@ export const LoginPage = () => {
       { username, password },
       {
         onSuccess: () => {
-          navigate("/dashboard"); // redirect after login
+          setError("");
+          navigate("/dashboard");
+        },
+        onError: (err) => {
+          console.error("Login failed:", err);
+          setError("Λανθασμένα στοιχεία σύνδεσης. Παρακαλώ δοκιμάστε ξανά.");
         },
       }
     );
@@ -25,13 +31,21 @@ export const LoginPage = () => {
   return (
     <Container maxWidth="xs" sx={{ mt: 8 }}>
       <Typography variant="h5" gutterBottom>Σύνδεση</Typography>
+      {error && (
+        <Alert severity="error" variant="outlined" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
       <form onSubmit={handleSubmit}>
         <TextField
           label="Όνομα χρήστη"
           fullWidth
           margin="normal"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => {
+            setUsername(e.target.value)
+            setError("");
+          }}
         />
         <TextField
           label="Κωδικός"
@@ -39,7 +53,10 @@ export const LoginPage = () => {
           fullWidth
           margin="normal"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => {
+            setPassword(e.target.value)
+            setError("");
+          }}
         />
         <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
           Είσοδος

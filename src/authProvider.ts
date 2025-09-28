@@ -13,30 +13,19 @@ export const authProvider: AuthProvider = {
         body: JSON.stringify({ username, password }),
       });
 
-      if (res.ok) {
-        const { token } = await res.json();
-        localStorage.setItem(TOKEN_KEY, token);
-        return {
-          success: true,
-          redirectTo: "/sales_per_product", // optional redirect
-        };
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || "Login failed");
       }
 
-      return {
-        success: false,
-        error: {
-          message: "Login failed",
-          name: "LoginError",
-        },
-      };
-    } catch (err) {
-      return {
-        success: false,
-        error: {
-          message: "Network error",
-          name: "NetworkError",
-        },
-      };
+      const { token } = await res.json();
+      localStorage.setItem("auth", token);
+
+      // Return resolved promise with user info or token
+      return Promise.resolve({ success: true });
+    } catch (error) {
+      // Explicitly reject to trigger onError
+      return Promise.reject(error);
     }
   },
   logout: async () => {
