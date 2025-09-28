@@ -19,7 +19,7 @@ export const authProvider: AuthProvider = {
       }
 
       const { token } = await res.json();
-      localStorage.setItem("auth", token);
+      localStorage.setItem(TOKEN_KEY, token);
 
       // Return resolved promise with user info or token
       return Promise.resolve({ success: true });
