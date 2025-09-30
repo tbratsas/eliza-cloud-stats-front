@@ -3,6 +3,7 @@ import { CustomTitle } from "./CustomTitle"; // adjust path
 import { Box, List, ListItem, Button, ListItemButton, ListItemText } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
 
                 fullWidth
                 onClick={() => {
-                  localStorage.removeItem("auth");
+                  localStorage.removeItem(TOKEN_KEY);
                   navigate("/login");
                 }}
               >

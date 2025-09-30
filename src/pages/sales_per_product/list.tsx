@@ -14,13 +14,14 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import PieChart from "./PieChart";
+const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
 
 export const SalesPerProduct = () => {
   const [showChart, setShowChart] = useState(false);
 
   const handleToggle = () => setShowChart((prev) => !prev);
   
-  const token = localStorage.getItem("auth");
+  const token = localStorage.getItem(TOKEN_KEY);
 
   const queryResult = useList({
     resource: "sales_per_product",

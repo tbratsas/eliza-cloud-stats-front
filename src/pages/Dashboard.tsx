@@ -4,11 +4,6 @@ import { useNavigate } from "react-router-dom";
 export const Dashboard = () => {
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        localStorage.removeItem("auth"); // or TOKEN_KEY
-        navigate("/login");
-    };
-
     return (
         <Container sx={{ mt: 4 }}>
             <Typography variant="h4" gutterBottom>Αναφορές Eliza</Typography>

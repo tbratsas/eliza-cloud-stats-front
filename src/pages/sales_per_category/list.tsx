@@ -15,13 +15,14 @@ import {
 import ColumnChart from './ColumnChart'
 
 import { useState } from "react";
+const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
 
 export const SalesPerCategory = () => {
   const [showChart, setShowChart] = useState(false);
   
   const handleToggle = () => setShowChart((prev) => !prev);
 
-  const token = localStorage.getItem("auth");
+  const token = localStorage.getItem(TOKEN_KEY);
 
   const queryResult = useList({
     resource: "sales_per_category",

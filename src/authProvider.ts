@@ -2,7 +2,7 @@ import type { AuthProvider } from "@refinedev/core";
 
 import { API_URL } from "./../config";
 
-export const TOKEN_KEY = "auth";
+const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
 
 export const authProvider: AuthProvider = {
   login: async ({ username, password }) => {
