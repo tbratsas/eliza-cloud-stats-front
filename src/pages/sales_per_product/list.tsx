@@ -20,7 +20,7 @@ export const SalesPerProduct = () => {
   const [showChart, setShowChart] = useState(false);
 
   const handleToggle = () => setShowChart((prev) => !prev);
-  
+
   const token = localStorage.getItem(TOKEN_KEY);
 
   const queryResult = useList({
@@ -36,7 +36,25 @@ export const SalesPerProduct = () => {
 
   const { data, isLoading, isError } = queryResult.query
 
-  if (isLoading) return <CircularProgress />;
+  if (isLoading) {
+    return (
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"      // horizontally center
+        justifyContent="flex-start" // align to top
+        height="100vh"
+        pt={8} // padding top (spacing units, optional)
+      >
+        <CircularProgress />
+        <Typography variant="body1" mt={2}>
+          Loading, please wait...
+        </Typography>
+      </Box>
+
+    );
+  }
+
   if (isError) return <Typography>Σφάλμα φόρτωσης δεδομένων</Typography>;
 
   const items = data?.data ?? [];

@@ -14,12 +14,15 @@ import {
 } from "@mui/material";
 import ColumnChart from './ColumnChart'
 
-import { useState } from "react";
 const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
 
+import { useState} from "react";
+/* import { useEffect, useState } from "react";
+import { delay } from "../../utils/delay";
+ */
 export const SalesPerCategory = () => {
   const [showChart, setShowChart] = useState(false);
-  
+
   const handleToggle = () => setShowChart((prev) => !prev);
 
   const token = localStorage.getItem(TOKEN_KEY);
@@ -36,8 +39,39 @@ export const SalesPerCategory = () => {
   //console.log(queryResult)
 
   const { data, isLoading, isError } = queryResult.query
+  
+  // SIMLUATE isLoading
+  //const [loading, setLoading] = useState(true);
 
-  if (isLoading) return <CircularProgress />;
+  /* useEffect(() => {
+        // Simulate a delay of 2 seconds before loading finishes
+        const simulateLoading = async () => {
+            await delay(2000);
+            setLoading(false);
+        };
+
+        simulateLoading();
+    }, []); */
+    
+  if (isLoading) {
+    return (
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"      
+        justifyContent="flex-start" 
+        height="100vh"
+        pt={8} 
+      >
+        <CircularProgress />
+        <Typography variant="body1" mt={2}>
+          Loading, please wait...
+        </Typography>
+      </Box>
+
+    );
+  }
+
   if (isError) return <Typography>Σφάλμα φόρτωσης δεδομένων</Typography>;
 
   const items = data?.data ?? [];
