@@ -19,6 +19,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CustomTitle } from "./CustomTitle";
+import { Header } from "../components";
 
 const drawerWidth = 240;
 const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
@@ -114,9 +115,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               <MenuIcon />
             </IconButton>
           )}
-          <Typography variant="h6" noWrap component="div">
-            Dashboard 2
-          </Typography>
+          {/* <Typography variant="h6" noWrap component="div"> */}
+           <Header/>
+          {/* </Typography> */}
         </Toolbar>
       </AppBar>
 
