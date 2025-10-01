@@ -1,0 +1,121 @@
+import { useList } from "@refinedev/core";
+import {
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Typography,
+  CircularProgress,
+  Container,
+  Box,
+  Button,
+  Collapse,
+} from "@mui/material";
+import ColumnChart from './ColumnChart'
+
+const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
+
+import { useState} from "react";
+/* import { useEffect, useState } from "react";
+import { delay } from "../../utils/delay";
+ */
+export const SalesPerCategory = () => {
+  const [showChart, setShowChart] = useState(false);
+
+  const handleToggle = () => setShowChart((prev) => !prev);
+
+  const token = localStorage.getItem(TOKEN_KEY);
+
+  const queryResult = useList({
+    resource: "sales_per_category",
+    meta: {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  });
+
+  //console.log(queryResult)
+
+  const { data, isLoading, isError } = queryResult.query
+  
+  // SIMLUATE isLoading
+  //const [loading, setLoading] = useState(true);
+
+  /* useEffect(() => {
+        // Simulate a delay of 2 seconds before loading finishes
+        const simulateLoading = async () => {
+            await delay(2000);
+            setLoading(false);
+        };
+
+        simulateLoading();
+    }, []); */
+    
+  if (isLoading) {
+    return (
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"      
+        justifyContent="flex-start" 
+        height="100vh"
+        pt={8} 
+      >
+        <CircularProgress />
+        <Typography variant="body1" mt={2}>
+          Loading, please wait...
+        </Typography>
+      </Box>
+
+    );
+  }
+
+  if (isError) return <Typography>Σφάλμα φόρτωσης δεδομένων</Typography>;
+
+  const items = data?.data ?? [];
+
+  return (
+    <Container sx={{ mt: 4 }}>
+      <Typography variant="h5" gutterBottom>Πωλήσεις ανά Κατηγγορία</Typography>
+      <Table>
+        <TableHead>
+          <TableRow>
+            {/* Replace with your actual field names */}
+            <TableCell>Όνομα</TableCell>
+            <TableCell>Συνολικές Πωλήσεις</TableCell>
+            <TableCell>Συνολικές Πωλήσεις Euros</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {items.map((item: any) => (
+            <TableRow key={item.category_name}>
+              <TableCell>{item.category_name}</TableCell>
+              <TableCell>{item.total_quantity}</TableCell>
+              <TableCell>{item.total_sales}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <Box mt={3}>
+        <Button
+          variant="contained"
+          onClick={handleToggle}
+          disabled={!Array.isArray(items) || items.length === 0}
+        >
+          {showChart ? "Απόκρυψη Γραφήματος" : "Εμφάνιση Γραφήματος"}
+        </Button>
+
+        <Collapse in={showChart}>
+          <Box mt={2}>
+            <ColumnChart
+              data={items as { category_name: string; total_sales: number }[]}
+              title="Πωλήσεις ανα Προϊόν"
+            />
+          </Box>
+        </Collapse>
+      </Box>
+    </Container>
+  );
+};
