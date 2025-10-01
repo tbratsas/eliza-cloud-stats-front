@@ -115,7 +115,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             </IconButton>
           )}
           <Typography variant="h6" noWrap component="div">
-            Dashboard
+            Dashboard 2
           </Typography>
         </Toolbar>
       </AppBar>

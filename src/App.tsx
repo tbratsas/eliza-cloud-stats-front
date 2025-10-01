@@ -9,8 +9,6 @@ import { Layout } from "./layout/Layout";
 import { dataProvider } from "./dataProvider"; // your custom wrapper
 import { Dashboard } from "./pages/Dashboard";
 
-const API_URL = "http://localhost:5001/api";
-
 function App() {
   return (
     <BrowserRouter>
@@ -44,7 +42,6 @@ function App() {
             path="/sales_per_product"
             element={
               <Authenticated key="auth-endpoint1" fallback={<Navigate to="/login" />}>
-
                 <Layout>
                   <SalesPerProduct />
                 </Layout>
