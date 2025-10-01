@@ -1,10 +1,5 @@
 import { useList } from "@refinedev/core";
 import {
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
   Typography,
   CircularProgress,
   Container,
@@ -12,18 +7,27 @@ import {
   Button,
   Collapse,
 } from "@mui/material";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useState } from "react";
+import { GridPaginationModel } from "@mui/x-data-grid";
+
 import PieChart from "./PieChart";
+
 const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
 
 export const SalesPerProduct = () => {
   const [showChart, setShowChart] = useState(false);
 
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    pageSize: 10,
+    page: 0,
+  });
+
   const handleToggle = () => setShowChart((prev) => !prev);
 
   const token = localStorage.getItem(TOKEN_KEY);
 
-  const queryResult = useList({
+  const { query } = useList({
     resource: "sales_per_product",
     meta: {
       headers: {
@@ -32,62 +36,71 @@ export const SalesPerProduct = () => {
     },
   });
 
-  //console.log(queryResult)
+  const { data, isLoading, isError } = query;
+  const items = data?.data ?? [];
 
-  const { data, isLoading, isError } = queryResult.query
+  const columns: GridColDef[] = [
+    { field: "product_id", headerName: "Product ID", width: 130 },
+    { field: "product_name", headerName: "Όνομα", flex: 1 },
+    { field: "total_quantity", headerName: "Ποσότητα", type: "number", width: 130 },
+    {
+      field: "total_sales",
+      headerName: "Συνολικές Πωλήσεις",
+      type: "number",
+      width: 180,
+      valueFormatter: (params: { value: number }) => `${params.value} Euros`,
+    },
+  ];
+
+  const rows = items.map((item: any) => ({
+    id: item.product_id, // Required by DataGrid
+    ...item,
+  }));
 
   if (isLoading) {
     return (
       <Box
         display="flex"
         flexDirection="column"
-        alignItems="center"      // horizontally center
-        justifyContent="flex-start" // align to top
+        alignItems="center"
+        justifyContent="flex-start"
         height="100vh"
-        pt={8} // padding top (spacing units, optional)
+        pt={8}
       >
         <CircularProgress />
         <Typography variant="body1" mt={2}>
           Loading, please wait...
         </Typography>
       </Box>
-
     );
   }
 
   if (isError) return <Typography>Σφάλμα φόρτωσης δεδομένων</Typography>;
 
-  const items = data?.data ?? [];
-
   return (
     <Container sx={{ mt: 4 }}>
-      <Typography variant="h5" gutterBottom>Πωλήσεις Προϊόντων</Typography>
-      <Table>
-        <TableHead>
-          <TableRow>
-            {/* Replace with your actual field names */}
-            <TableCell>Product ID</TableCell>
-            <TableCell>Όνομα</TableCell>
-            <TableCell>Ποσότητα</TableCell>
-            <TableCell>Συνολικές Πωλήσεις</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {items.map((item: any) => (
-            <TableRow key={item.product_id}>
-              <TableCell>{item.product_id}</TableCell>
-              <TableCell>{item.product_name}</TableCell>
-              <TableCell>{item.total_quantity}</TableCell>
-              <TableCell>{item.total_sales} Euros</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <Typography variant="h5" gutterBottom>
+        Πωλήσεις Προϊόντων
+      </Typography>
+
+      <Box sx={{ width: "100%", maxHeight: "70vh", overflow: "auto", mb: 3 }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[5, 10, 20]}
+          disableRowSelectionOnClick
+          sx={{ minHeight: 300 }}
+        />
+      </Box>
+
+
       <Box mt={3}>
         <Button
           variant="contained"
           onClick={handleToggle}
-          disabled={!Array.isArray(items) || items.length === 0}
+          disabled={items.length === 0}
         >
           {showChart ? "Απόκρυψη Γραφήματος" : "Εμφάνιση Γραφήματος"}
         </Button>
@@ -102,6 +115,5 @@ export const SalesPerProduct = () => {
         </Collapse>
       </Box>
     </Container>
-
   );
 };
