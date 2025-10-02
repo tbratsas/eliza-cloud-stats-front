@@ -38,7 +38,7 @@ export const SalesPerProduct = () => {
 
   const { data, isLoading, isError } = query;
   const items = data?.data ?? [];
-
+  //console.log(items)
   const columns: GridColDef[] = [
     { field: "product_id", headerName: "Product ID", width: 130 },
     { field: "product_name", headerName: "Όνομα", flex: 1 },
@@ -48,7 +48,7 @@ export const SalesPerProduct = () => {
       headerName: "Συνολικές Πωλήσεις",
       type: "number",
       width: 180,
-      valueFormatter: (params: { value: number }) => `${params.value} Euros`,
+      //valueFormatter: (params: { value: number }) => `${params.value} Euros`,
     },
   ];
 
@@ -69,13 +69,13 @@ export const SalesPerProduct = () => {
       >
         <CircularProgress />
         <Typography variant="body1" mt={2}>
-          Loading, please wait...
+          Φόρτωση, παρακαλώ περιμένετε...
         </Typography>
       </Box>
     );
   }
 
-  if (isError) return <Typography>Σφάλμα φόρτωσης δεδομένων</Typography>;
+  if (isError) return <Typography sx={{ m: 2 }} align="center" color="red">Σφάλμα φόρτωσης δεδομένων</Typography>;
 
   return (
     <Container sx={{ mt: 4 }}>
@@ -94,7 +94,6 @@ export const SalesPerProduct = () => {
           sx={{ minHeight: 300 }}
         />
       </Box>
-
 
       <Box mt={3}>
         <Button

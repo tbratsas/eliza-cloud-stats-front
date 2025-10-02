@@ -1,10 +1,5 @@
 import { useList } from "@refinedev/core";
 import {
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
   Typography,
   CircularProgress,
   Container,
@@ -12,22 +7,29 @@ import {
   Button,
   Collapse,
 } from "@mui/material";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { useState } from "react";
+import { GridPaginationModel } from "@mui/x-data-grid";
+
 import ColumnChart from './ColumnChart'
 
 const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
-
-import { useState} from "react";
 /* import { useEffect, useState } from "react";
 import { delay } from "../../utils/delay";
  */
 export const SalesPerCategory = () => {
   const [showChart, setShowChart] = useState(false);
 
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    pageSize: 10,
+    page: 0,
+  });
+
   const handleToggle = () => setShowChart((prev) => !prev);
 
   const token = localStorage.getItem(TOKEN_KEY);
 
-  const queryResult = useList({
+  const { query } = useList({
     resource: "sales_per_category",
     meta: {
       headers: {
@@ -38,8 +40,7 @@ export const SalesPerCategory = () => {
 
   //console.log(queryResult)
 
-  const { data, isLoading, isError } = queryResult.query
-  
+  const { data, isLoading, isError } = query;
   // SIMLUATE isLoading
   //const [loading, setLoading] = useState(true);
 
@@ -52,52 +53,62 @@ export const SalesPerCategory = () => {
 
         simulateLoading();
     }, []); */
-    
+  const items = data?.data ?? [];
+  console.log(items)
+  const columns: GridColDef[] = [
+    { field: "category_id", headerName: "Category ID", width: 130 },
+    { field: "category_name", headerName: "Όνομα", flex: 1 },
+    { field: "total_quantity", headerName: "Ποσότητα", type: "number", width: 130 },
+    {
+      field: "total_sales",
+      headerName: "Συνολικές Πωλήσεις",
+      type: "number",
+      width: 180,
+      //valueFormatter: (params: { value: number }) => `${params.value} Euros`,
+    },
+  ];
+
+  const rows = items.map((item: any) => ({
+    id: item.category_id, // Required by DataGrid
+    ...item,
+  }));
+
   if (isLoading) {
     return (
       <Box
         display="flex"
         flexDirection="column"
-        alignItems="center"      
-        justifyContent="flex-start" 
+        alignItems="center"
+        justifyContent="flex-start"
         height="100vh"
-        pt={8} 
+        pt={8}
       >
         <CircularProgress />
         <Typography variant="body1" mt={2}>
-          Loading, please wait...
+          Φόρτωση, παρακαλώ περιμένετε...
         </Typography>
       </Box>
-
     );
   }
 
-  if (isError) return <Typography>Σφάλμα φόρτωσης δεδομένων</Typography>;
-
-  const items = data?.data ?? [];
+  if (isError) return <Typography sx={{ m: 2 }} align="center" color="red">Σφάλμα φόρτωσης δεδομένων</Typography>;
 
   return (
     <Container sx={{ mt: 4 }}>
-      <Typography variant="h5" gutterBottom>Πωλήσεις ανά Κατηγγορία</Typography>
-      <Table>
-        <TableHead>
-          <TableRow>
-            {/* Replace with your actual field names */}
-            <TableCell>Όνομα</TableCell>
-            <TableCell>Συνολικές Πωλήσεις</TableCell>
-            <TableCell>Συνολικές Πωλήσεις Euros</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {items.map((item: any) => (
-            <TableRow key={item.category_name}>
-              <TableCell>{item.category_name}</TableCell>
-              <TableCell>{item.total_quantity}</TableCell>
-              <TableCell>{item.total_sales}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <Typography variant="h5" gutterBottom>
+        Πωλήσεις ανά Κατηγγορία
+      </Typography>
+      <Box sx={{ width: "100%", maxHeight: "70vh", overflow: "auto", mb: 3 }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[5, 10, 20]}
+          disableRowSelectionOnClick
+          sx={{ minHeight: 300 }}
+        />
+      </Box>
       <Box mt={3}>
         <Button
           variant="contained"
