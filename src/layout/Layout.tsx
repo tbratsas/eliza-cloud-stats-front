@@ -155,7 +155,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           ml: { md: `${effectiveCollapsed ? collapsedWidth : drawerWidth}px` },
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ px: { xs: 2, md: 1 } }}>
           {isMobile && (
             <IconButton
               color="inherit"
@@ -167,9 +167,14 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               <MenuIcon />
             </IconButton>
           )}
-          <Header />
+
+          {/* Header stretched across */}
+          <Box sx={{ flexGrow: 1 }}>
+            <Header />
+          </Box>
         </Toolbar>
       </AppBar>
+
 
       {/* Sidebar */}
       <Box
