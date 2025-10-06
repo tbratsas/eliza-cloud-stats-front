@@ -55,7 +55,7 @@ export const authProvider: AuthProvider = {
       return {
         id: 1,
         name: "Eliza Superuser",
-        avatar: "https://i.pravatar.cc/150?img=50",
+        //avatar: "https://i.pravatar.cc/150?img=50",
       };
     }
     return null;

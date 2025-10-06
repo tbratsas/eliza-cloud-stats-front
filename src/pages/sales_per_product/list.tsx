@@ -1,4 +1,4 @@
-import { useList } from "@refinedev/core";
+import { useList, CrudFilter } from "@refinedev/core";
 import {
   Typography,
   CircularProgress,
@@ -10,35 +10,61 @@ import {
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useState } from "react";
 import { GridPaginationModel } from "@mui/x-data-grid";
-
+import { DateRangeFilter, DateRange } from "../../components/DateRangeFilter";
 import PieChart from "./PieChart";
 
 const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
 
 export const SalesPerProduct = () => {
   const [showChart, setShowChart] = useState(false);
-
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     pageSize: 10,
     page: 0,
   });
+  const [dateRange, setDateRange] = useState<DateRange>({
+    startDate: null,
+    endDate: null,
+  });
+  const [filterTrigger, setFilterTrigger] = useState(0);
 
   const handleToggle = () => setShowChart((prev) => !prev);
 
   const token = localStorage.getItem(TOKEN_KEY);
 
+  // Build filters dynamically to satisfy TypeScript
+  const filters: CrudFilter[] = [];
+  if (dateRange.startDate) {
+    filters.push({
+      field: "start_date",
+      operator: "gte",
+      value: dateRange.startDate.toISOString(),
+    });
+  }
+  if (dateRange.endDate) {
+    filters.push({
+      field: "end_date",
+      operator: "lte",
+      value: dateRange.endDate.toISOString(),
+    });
+  }
+
   const { query } = useList({
     resource: "sales_per_product",
+    filters,
     meta: {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     },
+    queryOptions: {
+      enabled: true,
+      queryKey: ["sales_per_product", filterTrigger, dateRange],
+    },
   });
 
   const { data, isLoading, isError } = query;
   const items = data?.data ?? [];
-  //console.log(items)
+
   const columns: GridColDef[] = [
     { field: "product_id", headerName: "Product ID", width: 130 },
     { field: "product_name", headerName: "Όνομα", flex: 1 },
@@ -48,7 +74,6 @@ export const SalesPerProduct = () => {
       headerName: "Συνολικές Πωλήσεις",
       type: "number",
       width: 180,
-      //valueFormatter: (params: { value: number }) => `${params.value} Euros`,
     },
   ];
 
@@ -75,13 +100,28 @@ export const SalesPerProduct = () => {
     );
   }
 
-  if (isError) return <Typography sx={{ m: 2 }} align="center" color="red">Σφάλμα φόρτωσης δεδομένων</Typography>;
+  if (isError)
+    return (
+      <Typography sx={{ m: 2 }} align="center" color="red">
+        Σφάλμα φόρτωσης δεδομένων
+      </Typography>
+    );
+
+  const handleDateChange = (range: DateRange) => {
+    setDateRange(range);
+    setFilterTrigger((prev) => prev + 1); // trigger refetch
+  };
 
   return (
     <Container sx={{ mt: 4 }}>
       <Typography variant="h5" gutterBottom>
         Πωλήσεις Προϊόντων
       </Typography>
+
+      {/* --- Reusable Date Filter --- */}
+      <Box mb={2}>
+        <DateRangeFilter onChange={handleDateChange} initialValue={dateRange} />
+      </Box>
 
       <Box sx={{ width: "100%", maxHeight: "70vh", overflow: "auto", mb: 3 }}>
         <DataGrid
