@@ -112,6 +112,12 @@ export const SalesPerProduct = () => {
     setFilterTrigger((prev) => prev + 1); // trigger refetch
   };
 
+  const handleReset = () => {
+    setDateRange({ startDate: null, endDate: null });
+    setFilterTrigger((prev) => prev + 1);
+  };
+
+
   return (
     <Container sx={{ mt: 4 }}>
       <Typography variant="h5" gutterBottom>
@@ -121,6 +127,9 @@ export const SalesPerProduct = () => {
       {/* --- Reusable Date Filter --- */}
       <Box mb={2}>
         <DateRangeFilter onChange={handleDateChange} initialValue={dateRange} />
+        <Button variant="outlined" onClick={handleReset}>
+          Καθαρισμός
+        </Button>
       </Box>
 
       <Box sx={{ width: "100%", maxHeight: "70vh", overflow: "auto", mb: 3 }}>

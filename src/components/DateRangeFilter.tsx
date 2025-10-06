@@ -21,19 +21,14 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     onChange,
     initialValue,
 }) => {
-    const [startDate, setStartDate] = useState<Date | null>(
-        initialValue?.startDate || null
-    );
-    const [endDate, setEndDate] = useState<Date | null>(
-        initialValue?.endDate || null
-    );
+    const startDate = initialValue?.startDate || null;
+    const endDate = initialValue?.endDate || null;
 
     const handleApply = () => {
         if (startDate && endDate && startDate > endDate) {
             alert("Η ημερομηνία έναρξης δεν μπορεί να είναι μετά την ημερομηνία λήξης!");
             return;
         }
-
         onChange({ startDate, endDate });
     };
 
@@ -41,10 +36,10 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
         <Stack direction="row" spacing={2} alignItems="center">
             <DatePicker
                 selected={startDate}
-                onChange={(date) => setStartDate(date)}
+                onChange={(date) => onChange({ startDate: date, endDate })}
                 showTimeSelect
-                dateFormat="Pp"
-                placeholderText="Από"
+                dateFormat="dd/MM/yyyy HH:mm"
+                placeholderText="Ημερομηνία Έναρξης"
                 maxDate={endDate || undefined}
                 timeIntervals={15}
                 locale={el}
@@ -52,30 +47,22 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
 
             <DatePicker
                 selected={endDate}
-                onChange={(date) => setEndDate(date)}
+                onChange={(date) => onChange({ startDate, endDate: date })}
                 showTimeSelect
-                dateFormat="Pp"
-                placeholderText="Έως"
+                dateFormat="dd/MM/yyyy HH:mm"
+                placeholderText="Ημερομηνία Λήξης"
                 minDate={startDate || undefined}
                 timeIntervals={15}
                 locale={el}
             />
-            <Button variant="contained"
+
+            <Button
+                variant="contained"
                 onClick={handleApply}
-                disabled={!startDate || !endDate}>
+                disabled={!startDate || !endDate}
+            >
                 Εφαρμογή
             </Button>
-            <Button
-                variant="outlined"
-                onClick={() => {
-                    setStartDate(null);
-                    setEndDate(null);
-                    onChange({ startDate: null, endDate: null }); // triggers parent to refetch all
-                }}
-            >
-                Καθαρισμός
-            </Button>
-
         </Stack>
     );
 };
