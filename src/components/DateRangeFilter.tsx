@@ -74,7 +74,7 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
                     showTimeSelect
                     dateFormat="dd/MM/yyyy HH:mm"
                     placeholderText="Από"
-                    maxDate={endDate || undefined}
+                    maxDate={localRange.endDate || undefined}
                     timeIntervals={15}
                     locale={el}
                 />
@@ -84,7 +84,7 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
                     showTimeSelect
                     dateFormat="dd/MM/yyyy HH:mm"
                     placeholderText="Έως"
-                    minDate={startDate || undefined}
+                    minDate={localRange.startDate || undefined}
                     timeIntervals={15}
                     locale={el}
                 />
