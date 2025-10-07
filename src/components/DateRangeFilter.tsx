@@ -1,6 +1,6 @@
 // components/DateRangeFilter.tsx
 import * as React from "react";
-import { Stack, Button } from "@mui/material";
+import { Stack, Button, Box } from "@mui/material";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -15,11 +15,13 @@ export interface DateRange {
 interface DateRangeFilterProps {
     onChange: (range: DateRange) => void;
     initialValue?: DateRange;
+    onReset?: () => void;
 }
 
 export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     onChange,
     initialValue,
+    onReset
 }) => {
     const startDate = initialValue?.startDate || null;
     const endDate = initialValue?.endDate || null;
@@ -33,36 +35,52 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     };
 
     return (
-        <Stack direction="row" spacing={2} alignItems="center">
-            <DatePicker
-                selected={startDate}
-                onChange={(date) => onChange({ startDate: date, endDate })}
-                showTimeSelect
-                dateFormat="dd/MM/yyyy HH:mm"
-                placeholderText="Ημερομηνία Έναρξης"
-                maxDate={endDate || undefined}
-                timeIntervals={15}
-                locale={el}
-            />
-
-            <DatePicker
-                selected={endDate}
-                onChange={(date) => onChange({ startDate, endDate: date })}
-                showTimeSelect
-                dateFormat="dd/MM/yyyy HH:mm"
-                placeholderText="Ημερομηνία Λήξης"
-                minDate={startDate || undefined}
-                timeIntervals={15}
-                locale={el}
-            />
-
-            <Button
-                variant="contained"
-                onClick={handleApply}
-                disabled={!startDate || !endDate}
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: { xs: "column", sm: "row" },
+                gap: 2,
+                alignItems: "center",
+            }}
+        >
+            <Stack
+                direction={{ xs: "column", sm: "row" }}
+                spacing={2}
+                alignItems={{ xs: "stretch", sm: "center" }}
             >
-                Εφαρμογή
-            </Button>
-        </Stack>
+                <DatePicker
+                    selected={startDate}
+                    onChange={(date) => onChange({ startDate: date, endDate })}
+                    showTimeSelect
+                    dateFormat="dd/MM/yyyy HH:mm"
+                    placeholderText="Από"
+                    maxDate={endDate || undefined}
+                    timeIntervals={15}
+                    locale={el}
+                />
+                <DatePicker
+                    selected={endDate}
+                    onChange={(date) => onChange({ startDate, endDate: date })}
+                    showTimeSelect
+                    dateFormat="dd/MM/yyyy HH:mm"
+                    placeholderText="Έως"
+                    minDate={startDate || undefined}
+                    timeIntervals={15}
+                    locale={el}
+                />
+                <Button
+                    variant="contained"
+                    onClick={handleApply}
+                    disabled={!startDate || !endDate}
+                >
+                    Εφαρμογή
+                </Button>
+                {onReset && (
+                    <Button variant="outlined" onClick={onReset}>
+                        Καθαρισμός
+                    </Button>
+                )}
+            </Stack>
+        </Box>
     );
 };

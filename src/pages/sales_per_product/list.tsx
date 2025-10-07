@@ -6,11 +6,13 @@ import {
   Box,
   Button,
   Collapse,
+  Backdrop, // ✅ added
 } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useState } from "react";
 import { GridPaginationModel } from "@mui/x-data-grid";
 import { DateRangeFilter, DateRange } from "../../components/DateRangeFilter";
+import Snackbar from "@mui/material/Snackbar";
 import PieChart from "./PieChart";
 
 const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
@@ -26,12 +28,13 @@ export const SalesPerProduct = () => {
     endDate: null,
   });
   const [filterTrigger, setFilterTrigger] = useState(0);
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const handleToggle = () => setShowChart((prev) => !prev);
 
   const token = localStorage.getItem(TOKEN_KEY);
 
-  // Build filters dynamically to satisfy TypeScript
   const filters: CrudFilter[] = [];
   if (dateRange.startDate) {
     filters.push({
@@ -78,60 +81,71 @@ export const SalesPerProduct = () => {
   ];
 
   const rows = items.map((item: any) => ({
-    id: item.product_id, // Required by DataGrid
+    id: item.product_id,
     ...item,
   }));
 
-  if (isLoading) {
-    return (
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="flex-start"
-        height="100vh"
-        pt={8}
-      >
-        <CircularProgress />
-        <Typography variant="body1" mt={2}>
-          Φόρτωση, παρακαλώ περιμένετε...
-        </Typography>
-      </Box>
-    );
-  }
-
-  if (isError)
-    return (
-      <Typography sx={{ m: 2 }} align="center" color="red">
-        Σφάλμα φόρτωσης δεδομένων
-      </Typography>
-    );
-
   const handleDateChange = (range: DateRange) => {
     setDateRange(range);
-    setFilterTrigger((prev) => prev + 1); // trigger refetch
+    setFilterTrigger((prev) => prev + 1);
+    setToastMessage("Εφαρμόστηκε φίλτρο");
+    setToastOpen(true);
   };
 
   const handleReset = () => {
     setDateRange({ startDate: null, endDate: null });
     setFilterTrigger((prev) => prev + 1);
+    setToastMessage("Το φίλτρο καθαρίστηκε");
+    setToastOpen(true);
   };
-
 
   return (
     <Container sx={{ mt: 4 }}>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={toastOpen}
+        autoHideDuration={3000}
+        onClose={() => setToastOpen(false)}
+        message={toastMessage}
+      />
+
       <Typography variant="h5" gutterBottom>
         Πωλήσεις Προϊόντων
       </Typography>
 
-      {/* --- Reusable Date Filter --- */}
+      {/* --- Date Filter with Reset --- */}
       <Box mb={2}>
-        <DateRangeFilter onChange={handleDateChange} initialValue={dateRange} />
-        <Button variant="outlined" onClick={handleReset}>
-          Καθαρισμός
-        </Button>
+        <DateRangeFilter
+          onChange={handleDateChange}
+          initialValue={dateRange}
+          onReset={handleReset}
+        />
       </Box>
 
+      {/* ✅ Backdrop Spinner */}
+      <Backdrop
+        sx={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          backgroundColor: "rgba(0, 0, 0, 0.3)",
+        }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
+      {/* ✅ Error Message */}
+      {isError && (
+        <Typography sx={{ m: 2 }} align="center" color="red">
+          Σφάλμα φόρτωσης δεδομένων
+        </Typography>
+      )}
+
+      {/* ✅ Data Table */}
       <Box sx={{ width: "100%", maxHeight: "70vh", overflow: "auto", mb: 3 }}>
         <DataGrid
           rows={rows}
@@ -144,6 +158,7 @@ export const SalesPerProduct = () => {
         />
       </Box>
 
+      {/* ✅ Chart Toggle */}
       <Box mt={3}>
         <Button
           variant="contained"
