@@ -13,6 +13,7 @@ import { useState } from "react";
 import { GridPaginationModel } from "@mui/x-data-grid";
 import { DateRangeFilter, DateRange } from "../../components/DateRangeFilter";
 import Snackbar from "@mui/material/Snackbar";
+import SnackbarContent from "@mui/material/SnackbarContent";
 import PieChart from "./PieChart";
 
 const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
@@ -88,26 +89,41 @@ export const SalesPerProduct = () => {
   const handleDateChange = (range: DateRange) => {
     setDateRange(range);
     setFilterTrigger((prev) => prev + 1);
-    setToastMessage("Εφαρμόστηκε φίλτρο");
+    setToastMessage("Εφαρμόστηκε φίλτρο, παρακαλώ περιμένετε...");
     setToastOpen(true);
   };
 
   const handleReset = () => {
     setDateRange({ startDate: null, endDate: null });
     setFilterTrigger((prev) => prev + 1);
-    setToastMessage("Το φίλτρο καθαρίστηκε");
+    setToastMessage("Κατάργηση φίλτρου, παρακαλώ περιμένετε...");
     setToastOpen(true);
   };
 
   return (
     <Container sx={{ mt: 4 }}>
       <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={toastOpen}
-        autoHideDuration={3000}
+        autoHideDuration={4000}
         onClose={() => setToastOpen(false)}
-        message={toastMessage}
-      />
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <SnackbarContent
+          sx={{
+            backgroundColor: "#d32f2f", // red[700]
+            color: "#fff",
+            fontWeight: "bold",
+            px: 2,
+            py: 1,
+            borderRadius: 1,
+          }}
+          message={
+            <Box display="flex" alignItems="center" gap={1}>
+              <span>{toastMessage}</span>
+            </Box>
+          }
+        />
+      </Snackbar>
 
       <Typography variant="h5" gutterBottom>
         Πωλήσεις Προϊόντων

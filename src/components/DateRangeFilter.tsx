@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { el } from "date-fns/locale";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface DateRange {
     startDate: Date | null;
@@ -26,13 +26,33 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     const startDate = initialValue?.startDate || null;
     const endDate = initialValue?.endDate || null;
 
-    const handleApply = () => {
-        if (startDate && endDate && startDate > endDate) {
-            alert("Η ημερομηνία έναρξης δεν μπορεί να είναι μετά την ημερομηνία λήξης!");
-            return;
-        }
-        onChange({ startDate, endDate });
+    /*   const handleApply = () => {
+          if (startDate && endDate && startDate > endDate) {
+              alert("Η ημερομηνία έναρξης δεν μπορεί να είναι μετά την ημερομηνία λήξης!");
+              return;
+          }
+          onChange({ startDate, endDate });
+      }; */
+
+    const [localRange, setLocalRange] = useState<DateRange>(initialValue ?? { startDate: null, endDate: null });
+
+    const handleStartChange = (date: Date | null) => {
+        setLocalRange((prev) => ({ ...prev, startDate: date }));
     };
+
+    const handleEndChange = (date: Date | null) => {
+        setLocalRange((prev) => ({ ...prev, endDate: date }));
+    };
+
+    const handleApplyClick = () => {
+        if (localRange.startDate && localRange.endDate) {
+            onChange(localRange); // ← triggers filtering
+        }
+    };
+
+    useEffect(() => {
+        setLocalRange(initialValue ?? { startDate: null, endDate: null });
+    }, [initialValue]);
 
     return (
         <Box
@@ -49,8 +69,8 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
                 alignItems={{ xs: "stretch", sm: "center" }}
             >
                 <DatePicker
-                    selected={startDate}
-                    onChange={(date) => onChange({ startDate: date, endDate })}
+                    selected={localRange.startDate}
+                    onChange={handleStartChange}
                     showTimeSelect
                     dateFormat="dd/MM/yyyy HH:mm"
                     placeholderText="Από"
@@ -59,8 +79,8 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
                     locale={el}
                 />
                 <DatePicker
-                    selected={endDate}
-                    onChange={(date) => onChange({ startDate, endDate: date })}
+                    selected={localRange.endDate}
+                    onChange={handleEndChange}
                     showTimeSelect
                     dateFormat="dd/MM/yyyy HH:mm"
                     placeholderText="Έως"
@@ -70,8 +90,8 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
                 />
                 <Button
                     variant="contained"
-                    onClick={handleApply}
-                    disabled={!startDate || !endDate}
+                    onClick={handleApplyClick}
+                    disabled={!localRange.startDate || !localRange.endDate}
                 >
                     Εφαρμογή
                 </Button>
